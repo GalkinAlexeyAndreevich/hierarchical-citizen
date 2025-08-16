@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Скрипты запуска
+start.sh
+start.bat
+
+# Документация
+README.md
+DOCKER_README.md
+QUICKSTART.md
+DEPLOYMENT.md
+
+# Node modules (будут установлены в контейнере)
+**/node_modules
+
+# Логи
+*.log
+
+# Временные файлы
+.tmp
+.temp
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
