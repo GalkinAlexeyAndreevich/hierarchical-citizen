@@ -1,9 +1,9 @@
 <script setup>
   import { storeToRefs } from 'pinia'
-  import { useUIStore } from '../../stores/ui'
-  import { useCitizensStore } from '../../stores/citizens'
-  import { useCitiesStore } from '../../stores/cities'
-  import { useHierarchyStore } from '../../stores/hierarchy'
+  import { useUIStore } from '@stores/ui'
+  import { useCitizensStore } from '@stores/citizens'
+  import { useCitiesStore } from '@stores/cities'
+  import { useHierarchyStore } from '@stores/hierarchy'
 
   const uiStore = useUIStore()
   const { showHierarchyConfig, showAddCitizen, showAddCity } =

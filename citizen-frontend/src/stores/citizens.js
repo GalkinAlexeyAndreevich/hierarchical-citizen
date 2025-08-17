@@ -216,7 +216,7 @@ export const useCitizensStore = defineStore('citizens', () => {
           currentLevel[levelValue].citizens.push({
             id: citizen._id,
             name: citizen.name,
-            data: city ? city.population : 'Нет данных',
+            city: city,
           })
         } else {
           currentLevel = currentLevel[levelValue].children

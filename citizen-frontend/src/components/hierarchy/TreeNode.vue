@@ -2,6 +2,7 @@
   import { ref, computed, defineProps, defineEmits } from 'vue'
   import { ChevronDown, ChevronUp } from 'lucide-vue-next'
   import { getNameOnNumber } from '@/utils/getNameOnNumber'
+  import { useCitiesStore } from '@/stores/cities'
 
   const props = defineProps({
     node: {
@@ -23,6 +24,8 @@
   })
 
   const emit = defineEmits(['node-click'])
+
+  const citiesStore = useCitiesStore()
 
   const isExpanded = ref(true)
   const activeTooltip = ref(null)
@@ -114,9 +117,7 @@
           :style="tooltipStyle"
         >
           <div class="tooltip-content">
-            <strong>{{ getFullPath(nodeKey) }}</strong
-            ><br />
-            {{ citizen.data }}
+            <span>{{ citizen.city.name }}, {{ citizen.city.population }}</span>
           </div>
         </div>
       </div>

@@ -7,10 +7,10 @@
   import HierarchyInfo from '../hierarchy/HierarchyInfo.vue'
   import HierarchyTree from '../hierarchy/HierarchyTree.vue'
   import CitizenHierarchyView from '../CitizenHierarchyView.vue'
-  import { useUIStore } from '../../stores/ui'
-  import { useCitizensStore } from '../../stores/citizens'
-  import { useCitiesStore } from '../../stores/cities'
-  import { useHierarchyStore } from '../../stores/hierarchy'
+  import { useUIStore } from '@stores/ui'
+  import { useCitizensStore } from '@stores/citizens'
+  import { useCitiesStore } from '@stores/cities'
+  import { useHierarchyStore } from '@stores/hierarchy'
 
   // Используем UI store напрямую
   const uiStore = useUIStore()
@@ -18,10 +18,8 @@
     storeToRefs(uiStore)
 
   const {
-    toggleHierarchyConfig,
     toggleAddCity,
     toggleAddCitizen,
-    toggleAllCitizens,
     resetAllStates,
   } = uiStore
 
@@ -35,20 +33,14 @@
     citizens,
     totalCitizens,
     hierarchicalData,
-    loading: citizensLoading,
-    error: citizensError,
   } = storeToRefs(citizensStore)
-
+  
   const {
     cities,
-    loading: citiesLoading,
-    error: citiesError,
   } = storeToRefs(citiesStore)
 
   const {
     hierarchyConfig,
-    loading: hierarchyLoading,
-    error: hierarchyError,
   } = storeToRefs(hierarchyStore)
 
   // Локальные состояния
@@ -83,12 +75,9 @@
     }
   }
 
-  async function handleCityAdded(cityData) {
+  async function handleCityAdded() {
     try {
-      const newCity = await citiesStore.addCity(cityData)
-      // Закрываем форму
       toggleAddCity()
-      // Обновляем данные
       await loadAllData()
     } catch (err) {
       error.value = err.message
@@ -108,18 +97,6 @@
     }
   }
 
-  function handleToggleCitizens() {
-    toggleAllCitizens()
-  }
-
-  function handleCitySelected(city) {
-    // Город выбран
-  }
-
-  function handleNewHierarchyValue(value) {
-    // Новое значение иерархии
-  }
-
   // Загружаем данные при монтировании
   onMounted(async () => {
     try {
@@ -131,10 +108,6 @@
     }
   })
 
-  // Функция для закрытия всех форм
-  function closeAllForms() {
-    resetAllStates()
-  }
 </script>
 
 <template>
@@ -168,8 +141,6 @@
         :cities="cities"
         :hierarchy-options="{}"
         @submit="handleAddCitizen"
-        @city-selected="handleCitySelected"
-        @new-hierarchy-value="handleNewHierarchyValue"
       />
     </div>
 
@@ -179,7 +150,6 @@
         :hierarchy-config="hierarchyConfig"
         :total-citizens="totalCitizens"
         :show-all-citizens="showAllCitizens"
-        @toggle-citizens="handleToggleCitizens"
       />
 
       <HierarchyTree

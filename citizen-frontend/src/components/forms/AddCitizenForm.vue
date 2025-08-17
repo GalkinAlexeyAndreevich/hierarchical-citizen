@@ -10,7 +10,7 @@
     hierarchyOptions: Object,
   })
 
-  const emit = defineEmits(['submit', 'city-selected', 'new-hierarchy-value'])
+  const emit = defineEmits(['submit'])
 
   const formData = ref({
     name: '',
@@ -39,17 +39,9 @@
   }
 
   function handleSubmit() {
-    console.log('formData', { ...formData.value })
     emit('submit', { ...formData.value })
   }
 
-  function handleCitySelected(city) {
-    emit('city-selected', city)
-  }
-
-  function handleNewHierarchyValue(value) {
-    emit('new-hierarchy-value', value)
-  }
 </script>
 
 <template>
@@ -68,7 +60,6 @@
           v-model="formData.city_id"
           :cities="cities"
           :placeholder="'Выберите город'"
-          @city-selected="handleCitySelected"
           required
         />
         <InputSelect
@@ -76,7 +67,6 @@
           v-model="formData[level.type]"
           :options="getLevelOptions(level.type)"
           :placeholder="`Введите или выберите ${level.name.toLowerCase()}`"
-          @new-value="handleNewHierarchyValue"
           required
         />
       </div>

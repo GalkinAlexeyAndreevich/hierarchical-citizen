@@ -1,5 +1,6 @@
 <script setup>
-  import { computed } from 'vue'
+  import { useUIStore } from '@/stores/ui'
+import { computed } from 'vue'
 
   const props = defineProps({
     hierarchyConfig: Array,
@@ -10,7 +11,7 @@
     },
   })
 
-  defineEmits(['toggle-citizens'])
+  const { toggleAllCitizens } = useUIStore()
 
   const activeLevelsText = computed(() => {
     return props.hierarchyConfig
@@ -36,7 +37,7 @@
           <input
             type="checkbox"
             :checked="showAllCitizens"
-            @change="$emit('toggle-citizens')"
+            @change="toggleAllCitizens"
           />
           <span class="slider"></span>
         </label>
