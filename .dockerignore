@@ -14,8 +14,6 @@ start.bat
 # Документация
 README.md
 DOCKER_README.md
-QUICKSTART.md
-DEPLOYMENT.md
 
 # Node modules (будут установлены в контейнере)
 **/node_modules

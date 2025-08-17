@@ -9,7 +9,8 @@
     "init-data": "node scripts/initData.js",
     "migrate-cities": "node scripts/migrateCitySchema.js",
     "init-hierarchy": "node scripts/initHierarchy.js",
-    "migrate-hierarchy": "node scripts/migrateHierarchy.js"
+    "migrate-hierarchy": "node scripts/migrateHierarchy.js",
+    "migrate-citizen-city": "node scripts/migrateCitizenCity.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

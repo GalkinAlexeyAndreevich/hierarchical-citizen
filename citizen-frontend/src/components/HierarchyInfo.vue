@@ -7,6 +7,9 @@
         {{ activeLevelsText }}
       </p>
       <p>
+        <strong>Всего уровней:</strong> {{ hierarchyConfig.length }}
+      </p>
+      <p>
         <strong>Всего жителей:</strong> {{ totalCitizens }}
       </p>
       

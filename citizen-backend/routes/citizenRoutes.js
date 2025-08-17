@@ -15,11 +15,11 @@ router.get('/', async (req, res) => {
     }
     
     if (city_id) {
-      query.city_id = city_id;
+      query.city = city_id;
     }
     
     const citizens = await Citizen.find(query)
-      .populate('city_id')
+      .populate('city')
       .sort({ name: 1 });
     
     res.json({
@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const citizen = await Citizen.findById(req.params.id)
-      .populate('city_id');
+      .populate('city');
     
     if (!citizen) {
       return res.status(404).json({
@@ -76,7 +76,8 @@ router.post('/', async (req, res) => {
     // Создаем жителя
     const citizen = new Citizen({
       name,
-      city_id,
+      city: city_id,
+      city_id: city_id, // Оставляем для обратной совместимости
       groups
     });
     
@@ -84,83 +85,12 @@ router.post('/', async (req, res) => {
     
     // Получаем созданного жителя с популяцией города
     const savedCitizen = await Citizen.findById(citizen._id)
-      .populate('city_id');
+      .populate('city');
     
     res.status(201).json({
       success: true,
       data: savedCitizen,
       message: 'Житель успешно создан'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// Обновить жителя
-router.put('/:id', async (req, res) => {
-  try {
-    const { name, city_id, groups } = req.body;
-    
-    // Проверяем существование города
-    if (city_id) {
-      const city = await City.findById(city_id);
-      if (!city) {
-        return res.status(400).json({
-          success: false,
-          error: 'Город не найден'
-        });
-      }
-    }
-    
-    // Обновляем жителя
-    const updatedCitizen = await Citizen.findByIdAndUpdate(
-      req.params.id,
-      {
-        name,
-        city_id,
-        groups
-      },
-      { new: true, runValidators: true }
-    ).populate('city_id');
-    
-    if (!updatedCitizen) {
-      return res.status(404).json({
-        success: false,
-        error: 'Житель не найден'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: updatedCitizen,
-      message: 'Житель успешно обновлен'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// Удалить жителя
-router.delete('/:id', async (req, res) => {
-  try {
-    const citizen = await Citizen.findByIdAndDelete(req.params.id);
-    
-    if (!citizen) {
-      return res.status(404).json({
-        success: false,
-        error: 'Житель не найден'
-      });
-    }
-    
-    res.json({
-      success: true,
-      message: 'Житель успешно удален'
     });
   } catch (error) {
     res.status(500).json({

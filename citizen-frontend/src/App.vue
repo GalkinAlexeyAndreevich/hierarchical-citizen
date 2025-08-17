@@ -35,14 +35,30 @@ const refreshData = async () => {
 
 // Функция построения иерархии
 function buildHierarchy(citizens, config, cities) {
-  console.log("Информация о жителях",citizens);
+  console.log("Информация о жителях", citizens);
   const hierarchy = {};
   
+  const enabledLevels = config.filter(level => level.enabled);
+  console.log("Активные уровни:", enabledLevels);
+  
   citizens.forEach(citizen => {
+    // Проверяем, есть ли у жителя ВСЕ активные уровни
+    const hasAllLevels = enabledLevels.every(level => {
+      const hasLevel = citizen.groups.some(g => g.type === level.type);
+      console.log(`Гражданин ${citizen.name}: уровень ${level.type} (${level.name}) - ${hasLevel ? 'ЕСТЬ' : 'ОТСУТСТВУЕТ'}`);
+      return hasLevel;
+    });
+    
+    // Если у жителя нет всех уровней, пропускаем его
+    if (!hasAllLevels) {
+      console.log(`Гражданин ${citizen.name} пропущен - не все уровни`);
+      return;
+    }
+    
+    console.log(`Гражданин ${citizen.name} добавлен в иерархию`);
+    
     let currentLevel = hierarchy;
     let parentPath = '';
-    
-    const enabledLevels = config.filter(level => level.enabled);
     
     enabledLevels.forEach((level, index) => {
       const levelType = level.type;
@@ -86,31 +102,49 @@ function getLevelOptions(levelType) {
 // Добавление нового жителя
 async function addNewCitizen(citizen) {
   try {
-    console.log("citizen",structuredClone(citizen));
+    console.log("citizen", structuredClone(citizen));
     citizen.groups = [];
     
-    // Добавляем все уровни иерархии в groups
-    hierarchyConfig.value.forEach(level => {
-      if (level.type === 'city' && citizen.city_id) {
-        // Для города находим название по ID
-        const city = citiesData.value.find(c => c._id === citizen.city_id);
-        if (city) {
-          citizen.groups.push({
-            type: 'city',
-            name: city.name
-          });
-        }
-      } else if (citizen[level.type]) {
-        // Для остальных уровней
-        citizen.groups.push({
-          type: level.type,
-          name: citizen[level.type]
-        });
-      }
-    });
+    // Получаем активные уровни иерархии
+    const activeLevels = hierarchyConfig.value.filter(level => level.enabled);
+    console.log("Активные уровни для нового жителя:", activeLevels);
     
-    if (!citizen.city_id) {
-      throw new Error('Необходимо выбрать город');
+    // Проверяем, что все активные уровни заполнены
+    const missingLevels = [];
+    
+          activeLevels.forEach(level => {
+        if (level.type === 'city') {
+          if (!citizen.city_id) {
+            missingLevels.push(level.name);
+          } else {
+            // Для города находим название по ID
+            const city = citiesData.value.find(c => c._id === citizen.city_id);
+            if (city) {
+              citizen.groups.push({
+                type: 'city',
+                name: city.name
+              });
+            }
+          }
+        } else if (citizen[level.type]) {
+          // Для остальных уровней
+          citizen.groups.push({
+            type: level.type,
+            name: citizen[level.type]
+          });
+        } else {
+          missingLevels.push(level.name);
+        }
+      });
+      
+      // Убеждаемся, что поле city заполнено
+      if (citizen.city_id) {
+        citizen.city = citizen.city_id;
+      }
+    
+    // Если есть незаполненные уровни, показываем ошибку
+    if (missingLevels.length > 0) {
+      throw new Error(`Необходимо заполнить все уровни иерархии: ${missingLevels.join(', ')}`);
     }
     
     console.log('Создаваемый житель:', citizen);
@@ -283,7 +317,7 @@ async function loadData() {
     
     citiesData.value = citiesResponse.data;
     citizensData.value = citizensResponse.data;
-    
+    console.log("citizensData",citizensResponse.data);
     // Если есть конфигурация иерархии, используем её
     if (hierarchyResponse.data) {
       console.log('Загружена иерархия из БД:', hierarchyResponse.data);

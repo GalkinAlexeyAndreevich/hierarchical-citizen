@@ -26,6 +26,11 @@ const citizenSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'City',
     required: true
+  },
+  city: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'City',
+    required: true
   }
 }, {
   timestamps: true
@@ -34,12 +39,13 @@ const citizenSchema = new mongoose.Schema({
 // Индексы для оптимизации запросов
 citizenSchema.index({ 'groups.type': 1, 'groups.name': 1 });
 citizenSchema.index({ city_id: 1 });
+citizenSchema.index({ city: 1 });
 citizenSchema.index({ name: 1 });
 
 // Виртуальное поле для получения города
-citizenSchema.virtual('city', {
+citizenSchema.virtual('cityData', {
   ref: 'City',
-  localField: 'city_id',
+  localField: 'city',
   foreignField: '_id',
   justOne: true
 });

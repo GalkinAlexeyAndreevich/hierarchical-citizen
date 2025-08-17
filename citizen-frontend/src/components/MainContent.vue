@@ -46,10 +46,11 @@
 
     <!-- Отображение всех жителей -->
     <div v-if="showAllCitizens" class="citizens-section">
-      <CitizenHierarchyView 
-        :citizens="citizens"
-        :hierarchy-config="hierarchyConfig"
-      />
+             <CitizenHierarchyView 
+         :citizens="citizens"
+         :hierarchy-config="hierarchyConfig"
+         :cities="cities"
+       />
     </div>
   </main>
 </template>
