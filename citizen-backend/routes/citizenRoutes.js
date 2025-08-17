@@ -186,16 +186,16 @@ router.get('/hierarchy/tree', async (req, res) => {
           tree[group.type] = {};
         }
         
-        if (!tree[group.type][group.id]) {
-          tree[group.type][group.id] = {
-            id: group.id,
+        if (!tree[group.type][group.name]) {
+          tree[group.type][group.name] = {
+            id: group.name,
             name: group.name,
             type: group.type,
             citizens: []
           };
         }
         
-        tree[group.type][group.id].citizens.push({
+        tree[group.type][group.name].citizens.push({
           id: citizen._id,
           name: citizen.name,
           city: citizen.city_id
@@ -207,6 +207,31 @@ router.get('/hierarchy/tree', async (req, res) => {
       success: true,
       data: tree,
       totalCitizens: citizens.length
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Получить все уникальные значения для определенного типа иерархии
+router.get('/hierarchy/values/:type', async (req, res) => {
+  try {
+    const { type } = req.params;
+    
+    // Получаем все уникальные значения для данного типа
+    const values = await Citizen.aggregate([
+      { $unwind: '$groups' },
+      { $match: { 'groups.type': type } },
+      { $group: { _id: '$groups.name' } },
+      { $sort: { _id: 1 } }
+    ]);
+    
+    res.json({
+      success: true,
+      data: values.map(v => v._id)
     });
   } catch (error) {
     res.status(500).json({

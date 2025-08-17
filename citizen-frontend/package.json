@@ -7,12 +7,15 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.5.18"
+    "lucide-vue-next": "^0.539.0",
+    "sortablejs": "^1.15.6",
+    "vue": "^3.5.18",
+    "vue-draggable-next": "^2.2.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",

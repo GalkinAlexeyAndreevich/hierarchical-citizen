@@ -9,10 +9,6 @@ const groupSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
-  },
-  id: {
-    type: String,
-    required: true
   }
 }, { _id: false });
 
@@ -36,7 +32,7 @@ const citizenSchema = new mongoose.Schema({
 });
 
 // Индексы для оптимизации запросов
-citizenSchema.index({ 'groups.type': 1, 'groups.id': 1 });
+citizenSchema.index({ 'groups.type': 1, 'groups.name': 1 });
 citizenSchema.index({ city_id: 1 });
 citizenSchema.index({ name: 1 });
 

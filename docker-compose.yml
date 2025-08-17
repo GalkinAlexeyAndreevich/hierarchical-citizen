@@ -1,6 +1,5 @@
 version: '3.8'
 
-# Главная Docker конфигурация для всего проекта
 # Запускает фронтенд, бэкенд и MongoDB в одном контейнере
 
 services:
@@ -11,6 +10,7 @@ services:
       - "5173:5173"  # Фронтенд dev сервер
     environment:
       - MONGODB_URI=mongodb://mongodb:27017/citizen-db
+      - CORS_ORIGIN=http://localhost:5173
       - VITE_API_URL=http://localhost:3000
     depends_on:
       - mongodb

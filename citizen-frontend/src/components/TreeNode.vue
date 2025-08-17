@@ -5,9 +5,9 @@
         <span 
           v-if="hasChildren" 
           class="expand-icon"
-          :class="{ expanded: isExpanded }"
         >
-          ▼
+          <ChevronDown v-if="!isExpanded" class="icon" />
+          <ChevronUp v-else class="icon" />
         </span>
         <span v-else class="expand-icon-placeholder"></span>
         
@@ -15,7 +15,7 @@
         <span class="node-name">{{ nodeKey }}</span>
         
         <span v-if="node.citizens && node.citizens.length > 0" class="citizens-count">
-          ({{ node.citizens.length }} жителей)
+          ({{ node.citizens.length }} {{ getNameOnNumber(node.citizens.length, 'житель', 'жителя', 'жителей') }})
         </span>
       </div>
     </div>
@@ -59,6 +59,8 @@
 
 <script setup>
 import { ref, computed, defineProps, defineEmits } from 'vue';
+import { ChevronDown, ChevronUp } from 'lucide-vue-next';
+import { getNameOnNumber } from '@/utils/getNameOnNumber';
 
 const props = defineProps({
   node: {
@@ -93,7 +95,6 @@ function toggleNode() {
   if (hasChildren.value) {
     isExpanded.value = !isExpanded.value;
   }
-  emit('node-click', { node: props.node, key: props.nodeKey, level: props.level });
 }
 
 function showTooltip(citizen) {
@@ -149,15 +150,21 @@ function getFullPath(currentKey) {
 }
 
 .expand-icon {
-  font-size: 12px;
   color: #666;
-  transition: transform 0.2s ease;
   width: 16px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.expand-icon.expanded {
-  transform: rotate(90deg);
+.expand-icon .icon {
+  width: 16px;
+  height: 16px;
+  transition: color 0.2s ease;
+}
+
+.expand-icon:hover .icon {
+  color: #007bff;
 }
 
 .expand-icon-placeholder {

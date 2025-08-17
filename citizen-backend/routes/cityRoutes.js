@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
 // Создать новый город
 router.post('/', async (req, res) => {
   try {
-    const { name, data } = req.body;
+    const { name, population } = req.body;
     
     // Проверяем уникальность имени
     const existingCity = await City.findOne({ name });
@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
     
     const city = new City({
       name,
-      data: data || '0'
+      population: population || 0
     });
     
     await city.save();
@@ -89,7 +89,7 @@ router.post('/', async (req, res) => {
 // Обновить город
 router.put('/:id', async (req, res) => {
   try {
-    const { name, data } = req.body;
+    const { name, population } = req.body;
     
     // Проверяем уникальность имени (исключая текущий город)
     if (name) {
@@ -109,16 +109,17 @@ router.put('/:id', async (req, res) => {
       req.params.id,
       {
         name,
-        data
+        population
       },
       { new: true, runValidators: true }
     );
     
     if (!updatedCity) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Город не найден'
       });
+      return;
     }
     
     res.json({

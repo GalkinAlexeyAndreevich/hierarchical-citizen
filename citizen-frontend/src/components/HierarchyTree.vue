@@ -38,7 +38,7 @@
 
 <style scoped>
   .hierarchy-tree {
-    width: 100%;
+    width: 96%;
   }
 
   .empty-state {

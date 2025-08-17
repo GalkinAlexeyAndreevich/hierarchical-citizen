@@ -10,9 +10,9 @@ mongoose.connect('mongodb://localhost:27017/citizen-db', {
 
 // Данные для инициализации
 const citiesData = [
-  { name: 'Москва', data: '10000000 жителей' },
-  { name: 'Санкт-Петербург', data: '5000000 жителей' },
-  { name: 'Новосибирск', data: '1500000 жителей' }
+  { name: 'Москва', population: 10000000 },
+  { name: 'Санкт-Петербург', population: 5000000 },
+  { name: 'Новосибирск', population: 1500000 }
 ];
 
 const citizensData = [
@@ -21,8 +21,7 @@ const citizensData = [
     groups: [
       { type: 'city', name: 'Москва г.' },
       { type: 'district', name: 'Мытищи р-н' },
-      { type: 'street', name: 'Ленина ул.' },
-      { type: 'house', name: 'Дом 15' }
+      { type: 'street', name: 'Ленина ул.' }
     ]
   },
   {
@@ -30,8 +29,7 @@ const citizensData = [
     groups: [
       { type: 'city', name: 'Москва г.' },
       { type: 'district', name: 'Мытищи р-н' },
-      { type: 'street', name: 'Ленина ул.' },
-      { type: 'house', name: 'Дом 15' }
+      { type: 'street', name: 'Ленина ул.' }
     ]
   },
   {
@@ -39,8 +37,7 @@ const citizensData = [
     groups: [
       { type: 'city', name: 'Москва г.' },
       { type: 'district', name: 'Мытищи р-н' },
-      { type: 'street', name: 'Город ул.' },
-      { type: 'house', name: 'Дом 7' }
+      { type: 'street', name: 'Город ул.' }
     ]
   }
 ];

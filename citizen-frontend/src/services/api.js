@@ -51,6 +51,10 @@ export async function updateCitizen(id, citizenData) {
   });
 }
 
+export async function getHierarchyValues(type) {
+  return request(`/api/citizens/hierarchy/values/${type}`);
+}
+
 export async function deleteCitizen(id) {
   return request(`/api/citizens/${id}`, {
     method: 'DELETE',
@@ -88,5 +92,17 @@ export async function updateCity(id, cityData) {
 export async function deleteCity(id) {
   return request(`/api/cities/${id}`, {
     method: 'DELETE',
+  });
+}
+
+// Иерархия
+export async function getHierarchy() {
+  return request('/api/hierarchy');
+}
+
+export async function updateHierarchy(config) {
+  return request('/api/hierarchy', {
+    method: 'PATCH',
+    body: JSON.stringify(config),
   });
 }
