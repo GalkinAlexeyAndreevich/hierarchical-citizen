@@ -13,7 +13,7 @@ export const useCitiesStore = defineStore('cities', () => {
     error.value = null
     try {
       const response = await getCities()
-      
+
       if (response.data && Array.isArray(response.data)) {
         cities.value = response.data
       } else if (response && Array.isArray(response)) {
@@ -45,7 +45,7 @@ export const useCitiesStore = defineStore('cities', () => {
 
   // Получить город по ID
   function getCityById(id) {
-    return cities.value.find(city => city._id === id)
+    return cities.value.find((city) => city._id === id)
   }
 
   return {
@@ -54,6 +54,6 @@ export const useCitiesStore = defineStore('cities', () => {
     error,
     fetchCities,
     addCity,
-    getCityById
+    getCityById,
   }
 })

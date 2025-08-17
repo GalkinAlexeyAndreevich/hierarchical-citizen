@@ -43,13 +43,13 @@ export const useUIStore = defineStore('ui', () => {
     showAddCitizen,
     showAddCity,
     showAllCitizens,
-    
+
     // Методы
     toggleHierarchyConfig,
     toggleAddCitizen,
     toggleAddCity,
     toggleAllCitizens,
     closeAllModals,
-    resetAllStates
+    resetAllStates,
   }
 })

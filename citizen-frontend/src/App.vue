@@ -1,6 +1,6 @@
 <script setup>
-import AppHeader from './components/AppHeader.vue';
-import MainContent from './components/MainContent.vue';
+  import AppHeader from './components/layout/AppHeader.vue'
+  import MainContent from './components/layout/MainContent.vue'
 </script>
 
 <template>
@@ -11,10 +11,10 @@ import MainContent from './components/MainContent.vue';
 </template>
 
 <style scoped>
-#app {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
+  #app {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
 </style>

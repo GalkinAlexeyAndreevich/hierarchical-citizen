@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.min.js
+*.min.css
+package-lock.json
+
+# Vue directives (если нужно)
+src/**/*.vue

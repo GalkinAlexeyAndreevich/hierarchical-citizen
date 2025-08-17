@@ -1,19 +1,19 @@
 <script setup>
-  import { defineProps, defineEmits } from 'vue';
-  import TreeNode from './TreeNode.vue';
+  import { defineProps, defineEmits } from 'vue'
+  import TreeNode from './TreeNode.vue'
 
   const props = defineProps({
     data: {
       type: Object,
-      required: true
+      required: true,
     },
     config: {
       type: Array,
-      required: true
-    }
-  });
+      required: true,
+    },
+  })
 
-  defineEmits(['node-click']);
+  defineEmits(['node-click'])
 </script>
 
 <template>
@@ -21,10 +21,10 @@
     <div v-if="!data || Object.keys(data).length === 0" class="empty-state">
       <p>Нет данных для отображения</p>
     </div>
-    
+
     <div v-else class="tree-container">
-      <TreeNode 
-        v-for="(node, key) in data" 
+      <TreeNode
+        v-for="(node, key) in data"
         :key="key"
         :node="node"
         :nodeKey="key"
