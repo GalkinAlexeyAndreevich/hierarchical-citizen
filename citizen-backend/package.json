@@ -6,11 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "init-data": "node scripts/initData.js",
-    "migrate-cities": "node scripts/migrateCitySchema.js",
-    "init-hierarchy": "node scripts/initHierarchy.js",
-    "migrate-hierarchy": "node scripts/migrateHierarchy.js",
-    "migrate-citizen-city": "node scripts/migrateCitizenCity.js"
+    "init-data": "node scripts/initData.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

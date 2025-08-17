@@ -18,9 +18,7 @@
 
   const emit = defineEmits(['update:hierarchyConfig'])
 
-  const localHierarchyConfig = ref([...props.hierarchyConfig])
-
-  // Убрали локальное состояние, теперь используем пропс
+  const localHierarchyConfig = ref(JSON.parse(JSON.stringify(props.hierarchyConfig)))
 
   // Синхронизируем локальное состояние с пропсами
   watch(
@@ -152,47 +150,6 @@
 
     updateHierarchy(newConfig)
   }
-
-  // Убрали ненужные функции, теперь используем состояние из родительского компонента
-
-  // Функция для проверки, подходит ли житель по иерархии
-  function checkCitizenHierarchyMatch(citizen) {
-    if (!citizen.groups || !Array.isArray(citizen.groups)) {
-      return false
-    }
-
-    // Получаем активные уровни иерархии
-    const activeLevels = localHierarchyConfig.value.filter(
-      (level) => level.enabled,
-    )
-
-    // Проверяем, есть ли у жителя все необходимые уровни
-    for (const level of activeLevels) {
-      if (level.required && !citizen.groups.includes(level.name)) {
-        return false // Отсутствует обязательный уровень
-      }
-    }
-
-    return true // Житель подходит по иерархии
-  }
-
-  // Функция для фильтрации жителей по иерархии
-  function filterCitizensByHierarchy(citizens) {
-    if (!Array.isArray(citizens)) return { matching: [], nonMatching: [] }
-
-    const matching = []
-    const nonMatching = []
-
-    for (const citizen of citizens) {
-      if (checkCitizenHierarchyMatch(citizen)) {
-        matching.push(citizen)
-      } else {
-        nonMatching.push(citizen)
-      }
-    }
-
-    return { matching, nonMatching }
-  }
 </script>
 
 <template>
@@ -231,6 +188,7 @@
           @input="updateLevelField(index, 'type', $event.target.value)"
           placeholder="Тип уровня"
           class="level-input type-input"
+          :disabled="!!element._id"
         />
         <input
           :value="element.name"
@@ -357,6 +315,13 @@
     border-radius: 4px;
     font-size: 14px;
     transition: all 0.2s ease;
+  }
+
+  .level-input:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
   }
 
   .type-input {
