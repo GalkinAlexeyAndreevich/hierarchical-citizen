@@ -1,32 +1,67 @@
+<script setup>
+import { storeToRefs } from 'pinia';
+import { useUIStore } from '../stores/ui';
+import { useCitizensStore } from '../stores/citizens';
+import { useCitiesStore } from '../stores/cities';
+import { useHierarchyStore } from '../stores/hierarchy';
+
+const uiStore = useUIStore();
+const {
+  showHierarchyConfig,
+  showAddCitizen,
+  showAddCity,
+} = storeToRefs(uiStore);
+
+const {
+  toggleHierarchyConfig,
+  toggleAddCitizen,
+  toggleAddCity,
+} = uiStore;
+
+const citizensStore = useCitizensStore();
+const citiesStore = useCitiesStore();
+const hierarchyStore = useHierarchyStore();
+
+// Функция обновления данных
+async function refreshData() {
+  try {
+    await Promise.all([
+      citiesStore.fetchCities(),
+      citizensStore.fetchCitizens(),
+      hierarchyStore.fetchHierarchy()
+    ]);
+    console.log('Данные успешно обновлены');
+  } catch (err) {
+    console.error('Ошибка обновления данных:', err);
+  }
+}
+
+
+
+</script>
+
 <template>
   <header class="header">
     <h1>Иерархия жителей</h1>
     <div class="controls">
-      <button @click="$emit('toggle-hierarchy')" class="btn btn-primary">
+      <button @click="toggleHierarchyConfig" class="btn btn-primary">
         {{ showHierarchyConfig ? 'Скрыть' : 'Показать' }} настройки иерархии
       </button>
-      <button @click="$emit('toggle-add-citizen')" class="btn btn-success">
+      <button @click="toggleAddCitizen" class="btn btn-success">
         {{ showAddCitizen ? 'Скрыть' : 'Добавить' }} жителя
       </button>
-      <button @click="$emit('toggle-add-city')" class="btn btn-warning">
+      <button @click="toggleAddCity" class="btn btn-warning">
         {{ showAddCity ? 'Скрыть' : 'Добавить' }} город
       </button>
-      <button @click="$emit('refresh-data')" class="btn btn-info">
+      <button @click="refreshData" class="btn btn-info">
         Обновить данные
       </button>
     </div>
+    
+
+
   </header>
 </template>
-
-<script setup>
-defineProps({
-  showHierarchyConfig: Boolean,
-  showAddCitizen: Boolean,
-  showAddCity: Boolean
-});
-
-defineEmits(['toggle-hierarchy', 'toggle-add-citizen', 'toggle-add-city', 'refresh-data']);
-</script>
 
 <style scoped>
 .header {

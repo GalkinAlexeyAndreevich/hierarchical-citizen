@@ -1,44 +1,3 @@
-<template>
-  <div class="city-select-container">
-    <div class="input-wrapper">
-      <input
-        v-model="inputValue"
-        :placeholder="placeholder"
-        class="city-input-field"
-        :class="{ 'error': showError }"
-        @input="handleInput"
-        @focus="showDropdown = true; showError = false"
-        @blur="handleBlur"
-        @keydown="handleKeydown"
-      />
-      <div class="input-arrow" @click="toggleDropdown">▼</div>
-    </div>
-    
-    <div v-if="showError" class="error-message">
-      Пожалуйста, выберите город из списка
-    </div>
-    
-    <div v-if="showDropdown && filteredCities.length > 0" class="dropdown">
-      <div
-        v-for="city in filteredCities"
-        :key="city._id"
-        :class="['dropdown-item', { 'selected': city._id === selectedCityId }]"
-        @click="selectCity(city)"
-        @mouseenter="selectedCityId = city._id"
-      >
-        <div class="city-name">{{ city.name }}</div>
-        <div class="city-population">{{ formatPopulation(city.population) }}</div>
-      </div>
-    </div>
-    
-    <div v-if="showDropdown && filteredCities.length === 0 && inputValue" class="dropdown">
-      <div class="dropdown-item no-results">
-        Город не найден. Введите другое название.
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, computed, watch, defineProps, defineEmits } from 'vue';
 
@@ -150,6 +109,47 @@ function formatPopulation(population) {
   return new Intl.NumberFormat('ru-RU').format(population);
 }
 </script>
+
+<template>
+  <div class="city-select-container">
+    <div class="input-wrapper">
+      <input
+        v-model="inputValue"
+        :placeholder="placeholder"
+        class="city-input-field"
+        :class="{ 'error': showError }"
+        @input="handleInput"
+        @focus="showDropdown = true; showError = false"
+        @blur="handleBlur"
+        @keydown="handleKeydown"
+      />
+      <div class="input-arrow" @click="toggleDropdown">▼</div>
+    </div>
+    
+    <div v-if="showError" class="error-message">
+      Пожалуйста, выберите город из списка
+    </div>
+    
+    <div v-if="showDropdown && filteredCities.length > 0" class="dropdown">
+      <div
+        v-for="city in filteredCities"
+        :key="city._id"
+        :class="['dropdown-item', { 'selected': city._id === selectedCityId }]"
+        @click="selectCity(city)"
+        @mouseenter="selectedCityId = city._id"
+      >
+        <div class="city-name">{{ city.name }}</div>
+        <div class="city-population">{{ formatPopulation(city.population) }}</div>
+      </div>
+    </div>
+    
+    <div v-if="showDropdown && filteredCities.length === 0 && inputValue" class="dropdown">
+      <div class="dropdown-item no-results">
+        Город не найден. Введите другое название.
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .city-select-container {

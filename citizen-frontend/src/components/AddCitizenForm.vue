@@ -1,36 +1,3 @@
-<template>
-  <div v-if="show" class="add-citizen">
-    <h3>Добавить нового жителя</h3>
-    <form @submit.prevent="handleSubmit" class="citizen-form">
-      <div v-for="level in hierarchyConfig" :key="level.type" class="form-group">
-        <label>{{ level.name }}:</label>
-        <!-- Для города используем CitySelect, для остальных - InputSelect -->
-        <CitySelect 
-          v-if="level.type === 'city'"
-          v-model="formData.city_id" 
-          :cities="cities"
-          :placeholder="'Выберите город'"
-          @city-selected="handleCitySelected"
-          required
-        />
-        <InputSelect 
-          v-else
-          v-model="formData[level.type]" 
-          :options="getLevelOptions(level.type)"
-          :placeholder="`Введите или выберите ${level.name.toLowerCase()}`"
-          @new-value="handleNewHierarchyValue"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label>Имя жителя:</label>
-        <input v-model="formData.name" required class="form-input" />
-      </div>
-      <button type="submit" class="btn btn-success">Добавить жителя</button>
-    </form>
-  </div>
-</template>
-
 <script setup>
 import { ref, watch } from 'vue';
 import CitySelect from './CitySelect.vue';
@@ -80,6 +47,39 @@ function handleNewHierarchyValue(value) {
   emit('new-hierarchy-value', value);
 }
 </script>
+
+<template>
+  <div class="add-citizen">
+    <h3>Добавить нового жителя</h3>
+    <form @submit.prevent="handleSubmit" class="citizen-form">
+      <div v-for="level in hierarchyConfig" :key="level.type" class="form-group">
+        <label>{{ level.name }}:</label>
+        <!-- Для города используем CitySelect, для остальных - InputSelect -->
+        <CitySelect 
+          v-if="level.type === 'city'"
+          v-model="formData.city_id" 
+          :cities="cities"
+          :placeholder="'Выберите город'"
+          @city-selected="handleCitySelected"
+          required
+        />
+        <InputSelect 
+          v-else
+          v-model="formData[level.type]" 
+          :options="getLevelOptions(level.type)"
+          :placeholder="`Введите или выберите ${level.name.toLowerCase()}`"
+          @new-value="handleNewHierarchyValue"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label>Имя жителя:</label>
+        <input v-model="formData.name" required class="form-input" />
+      </div>
+      <button type="submit" class="btn btn-success">Добавить жителя</button>
+    </form>
+  </div>
+</template>
 
 <style scoped>
 .add-citizen {

@@ -1,88 +1,3 @@
-<template>
-  <div class="hierarchy-manager">
-                 <div class="header-row">
-        <h3>Иерархия</h3>
-      </div>
-    
-         <div class="levels-container">
-             <div 
-         v-for="(element, index) in localHierarchyConfig" 
-         :key="index"
-         class="level-item"
-       >
-                <div class="move-buttons">
-          <button 
-            @click="moveLevelUp(index)" 
-            :disabled="index === 0"
-            class="btn-move"
-            title="Поднять уровень"
-          >
-            <ChevronUp class="icon" />
-          </button>
-          <button 
-            @click="moveLevelDown(index)" 
-            :disabled="index === localHierarchyConfig.length - 1"
-            class="btn-move"
-            title="Опустить уровень"
-          >
-            <ChevronDown class="icon" />
-          </button>
-        </div>
-                  <input
-           :value="element.type"
-           @input="updateLevelField(index, 'type', $event.target.value)"
-           placeholder="Тип уровня"
-           class="level-input type-input"
-         />
-         <input
-           :value="element.name"
-           @input="updateLevelField(index, 'name', $event.target.value)"
-           placeholder="Название уровня"
-           class="level-input"
-         />
-                 <div class="level-toggle">
-          <span class="toggle-label">{{ element.enabled ? "Вкл" : "Выкл" }}</span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              :checked="element.enabled"
-              @change="toggleLevelVisibility(index)"
-            />
-            <span class="slider"></span>
-          </label>
-        </div>
-        <button
-          v-if="!element.required"
-          @click="removeLevel(index)"
-          class="btn-remove"
-          title="Удалить уровень"
-        >
-          <Trash2 class="icon" />
-        </button>
-      </div>
-    </div>
-
-    <div class="buttons-container">
-      <button @click="addLevel" class="btn-add">
-        <Plus class="icon" />
-        Добавить уровень
-      </button>
-      
-      <button @click="saveChanges" class="btn-save" :disabled="!hasChanges">
-        <Save class="icon" />
-        Сохранить изменения
-      </button>
-      
-             <button @click="resetChanges" class="btn-reset" :disabled="!hasChanges">
-         <RotateCcw class="icon" />
-         Сбросить
-       </button>
-     </div>
-
-      <!-- Убрали отображение жителей вне иерархии отсюда - теперь оно в MainContent -->
-   </div>
- </template>
-
 <script setup>
 import { ref, watch, computed } from "vue";
 import { Trash2, Plus, Save, RotateCcw, ChevronUp, ChevronDown } from 'lucide-vue-next';
@@ -104,7 +19,6 @@ const localHierarchyConfig = ref([...props.hierarchyConfig]);
 
 // Синхронизируем локальное состояние с пропсами
 watch(() => props.hierarchyConfig, (newConfig) => {
-  console.log('watch triggered, new config:', newConfig);
   if (newConfig) {
     localHierarchyConfig.value = [...newConfig];
   }
@@ -123,19 +37,11 @@ const hasChanges = computed(() => {
 
 // Функция для обновления иерархии
 function updateHierarchy(newConfig) {
-  console.log('updateHierarchy called with:', newConfig);
-  console.log('Previous localHierarchyConfig:', localHierarchyConfig.value);
-  
   localHierarchyConfig.value = [...newConfig];
-  
-  console.log('Updated localHierarchyConfig:', localHierarchyConfig.value);
-  console.log('hasChanges after update:', hasChanges.value);
 }
 
 // Функция для сохранения изменений
 function saveChanges() {
-  console.log('saveChanges called, hasChanges:', hasChanges.value);
-  
   // Валидация перед сохранением
   if (!validateTypeUniqueness()) {
     alert('Ошибка: Типы уровней должны быть уникальными!');
@@ -155,7 +61,6 @@ function saveChanges() {
 
 // Сбросить изменения
 function resetChanges() {
-  console.log('resetChanges called');
   if (confirm('Вы уверены, что хотите сбросить все изменения?')) {
     localHierarchyConfig.value = [...props.hierarchyConfig];
   }
@@ -163,7 +68,6 @@ function resetChanges() {
 
 // Добавить уровень
 function addLevel() {
-  console.log('addLevel called');
   const newLevel = {
     type: "",
     name: "",
@@ -175,7 +79,6 @@ function addLevel() {
 
 // Удалить уровень
 function removeLevel(index) {
-  console.log('removeLevel called, index:', index);
   const level = localHierarchyConfig.value[index];
   if (level.required) return;
 
@@ -193,7 +96,6 @@ function toggleLevelVisibility(index) {
 
 // Обновить поле уровня
 function updateLevelField(index, field, value) {
-  console.log('updateLevelField:', { index, field, value });
   const newConfig = [...localHierarchyConfig.value];
   newConfig[index][field] = value;
   updateHierarchy(newConfig);
@@ -210,8 +112,6 @@ function validateTypeUniqueness() {
 function moveLevelUp(index) {
   if (index === 0) return; // Нельзя поднять первый элемент
   
-  console.log('Moving level up from index:', index);
-  
   const newConfig = [...localHierarchyConfig.value];
   const currentElement = newConfig[index];
   const previousElement = newConfig[index - 1];
@@ -220,15 +120,12 @@ function moveLevelUp(index) {
   newConfig[index] = previousElement;
   newConfig[index - 1] = currentElement;
   
-  console.log('Moved up config:', newConfig);
   updateHierarchy(newConfig);
 }
 
 // Переместить уровень вниз
 function moveLevelDown(index) {
   if (index === localHierarchyConfig.value.length - 1) return; // Нельзя опустить последний элемент
-  
-  console.log('Moving level down from index:', index);
   
   const newConfig = [...localHierarchyConfig.value];
   const currentElement = newConfig[index];
@@ -238,7 +135,6 @@ function moveLevelDown(index) {
   newConfig[index] = nextElement;
   newConfig[index + 1] = currentElement;
   
-  console.log('Moved down config:', newConfig);
   updateHierarchy(newConfig);
 }
 
@@ -281,6 +177,92 @@ function filterCitizensByHierarchy(citizens) {
   return { matching, nonMatching };
 }
 </script>
+
+<template>
+  <div class="hierarchy-manager">
+    <div class="header-row">
+      <h3>Иерархия</h3>
+    </div>
+    
+    <div class="levels-container">
+      <div 
+        v-for="(element, index) in localHierarchyConfig" 
+        :key="index"
+        class="level-item"
+      >
+        <div class="move-buttons">
+          <button 
+            @click="moveLevelUp(index)" 
+            :disabled="index === 0"
+            class="btn-move"
+            title="Поднять уровень"
+          >
+            <ChevronUp class="icon" />
+          </button>
+          <button 
+            @click="moveLevelDown(index)" 
+            :disabled="index === localHierarchyConfig.length - 1"
+            class="btn-move"
+            title="Опустить уровень"
+          >
+            <ChevronDown class="icon" />
+          </button>
+        </div>
+        
+        <input
+          :value="element.type"
+          @input="updateLevelField(index, 'type', $event.target.value)"
+          placeholder="Тип уровня"
+          class="level-input type-input"
+        />
+        <input
+          :value="element.name"
+          @input="updateLevelField(index, 'name', $event.target.value)"
+          placeholder="Название уровня"
+          class="level-input"
+        />
+        
+        <div class="level-toggle">
+          <span class="toggle-label">{{ element.enabled ? "Вкл" : "Выкл" }}</span>
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              :checked="element.enabled"
+              @change="toggleLevelVisibility(index)"
+            />
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <button
+          v-if="!element.required"
+          @click="removeLevel(index)"
+          class="btn-remove"
+          title="Удалить уровень"
+        >
+          <Trash2 class="icon" />
+        </button>
+      </div>
+    </div>
+
+    <div class="buttons-container">
+      <button @click="addLevel" class="btn-add">
+        <Plus class="icon" />
+        Добавить уровень
+      </button>
+      
+      <button @click="saveChanges" class="btn-save" :disabled="!hasChanges">
+        <Save class="icon" />
+        Сохранить изменения
+      </button>
+      
+      <button @click="resetChanges" class="btn-reset" :disabled="!hasChanges">
+        <RotateCcw class="icon" />
+        Сбросить
+      </button>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .hierarchy-manager {

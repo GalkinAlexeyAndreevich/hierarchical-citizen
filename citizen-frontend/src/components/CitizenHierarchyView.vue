@@ -1,49 +1,3 @@
-<template>
-  <div class="citizens-view">
-    <h4>Все жители ({{ citizens.length }})</h4>
-    
-    <div class="citizens-list">
-      <div 
-        v-for="citizen in citizens" 
-        :key="citizen._id"
-        class="citizen-item"
-      >
-          <div 
-           class="citizen-name"
-           @mouseenter="showTooltip(citizen, $event)"
-           @mouseleave="hideTooltip"
-         >
-           {{ citizen.name }}
-           
-           <div 
-             v-if="activeTooltip === citizen._id"
-             class="tooltip"
-             :style="tooltipStyle"
-           >
-             <div class="tooltip-content">
-               {{ getCitizenCityInfo(citizen) ? `${getCitizenCityInfo(citizen).name}, ${getCitizenCityInfo(citizen).population} жителей` : 'Город не указан' }}
-             </div>
-           </div>
-         </div>
-                 <div class="citizen-hierarchy">
-           <span 
-             v-for="(group, index) in citizen.groups" 
-             :key="index"
-             class="hierarchy-level"
-           >
-             <span class="level-type">{{ getLevelDisplayName(group.type) }}</span>
-             {{ group.name }}
-             <span v-if="index < citizen.groups.length - 1" class="arrow">→</span>
-           </span>
-         </div>
-        <div class="citizen-debug" v-if="citizen.groups.length === 0">
-          <span class="no-groups">Нет групп иерархии</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 
@@ -74,8 +28,6 @@ function getLevelDisplayName(levelType) {
 
 // Функция для получения информации о городе жителя
 function getCitizenCityInfo(citizen) {
-  console.log("citizen", citizen, props.cities);
-  
   // Проверяем, есть ли уже загруженные данные города
   if (citizen.city && citizen.city.name) {
     return {
@@ -114,6 +66,54 @@ function hideTooltip() {
   activeTooltip.value = null;
 }
 </script>
+
+<template>
+  <div class="citizens-view">
+    <h4>Все жители ({{ citizens.length }})</h4>
+    
+    <div class="citizens-list">
+      <div 
+        v-for="citizen in citizens" 
+        :key="citizen._id"
+        class="citizen-item"
+      >
+        <div 
+          class="citizen-name"
+          @mouseenter="showTooltip(citizen, $event)"
+          @mouseleave="hideTooltip"
+        >
+          {{ citizen.name }}
+          
+          <div 
+            v-if="activeTooltip === citizen._id"
+            class="tooltip"
+            :style="tooltipStyle"
+          >
+            <div class="tooltip-content">
+              {{ getCitizenCityInfo(citizen) ? `${getCitizenCityInfo(citizen).name}, ${getCitizenCityInfo(citizen).population} жителей` : 'Город не указан' }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="citizen-hierarchy">
+          <span 
+            v-for="(group, index) in citizen.groups" 
+            :key="index"
+            class="hierarchy-level"
+          >
+            <span class="level-type">{{ getLevelDisplayName(group.type) }}</span>
+            {{ group.name }}
+            <span v-if="index < citizen.groups.length - 1" class="arrow">→</span>
+          </span>
+        </div>
+        
+        <div class="citizen-debug" v-if="citizen.groups.length === 0">
+          <span class="no-groups">Нет групп иерархии</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .citizens-view {

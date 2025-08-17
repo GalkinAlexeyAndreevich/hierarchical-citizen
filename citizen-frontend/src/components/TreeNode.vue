@@ -1,62 +1,3 @@
-<template>
-  <div class="tree-node" :style="{ marginLeft: level * 20 + 'px' }">
-    <div class="node-content" @click="toggleNode">
-      <div class="node-header">
-        <span 
-          v-if="hasChildren" 
-          class="expand-icon"
-        >
-          <ChevronDown v-if="!isExpanded" class="icon" />
-          <ChevronUp v-else class="icon" />
-        </span>
-        <span v-else class="expand-icon-placeholder"></span>
-        
-        <span class="node-type">{{ node.type }}</span>
-        <span class="node-name">{{ nodeKey }}</span>
-        
-        <span v-if="node.citizens && node.citizens.length > 0" class="citizens-count">
-          ({{ node.citizens.length }} {{ getNameOnNumber(node.citizens.length, 'житель', 'жителя', 'жителей') }})
-        </span>
-      </div>
-    </div>
-    
-    <div v-if="node.citizens && node.citizens.length > 0 && isExpanded" class="citizens-list">
-      <div 
-        v-for="citizen in node.citizens" 
-        :key="citizen.name"
-        class="citizen-item"
-        @mouseenter="showTooltip(citizen)"
-        @mouseleave="hideTooltip"
-      >
-        <span class="citizen-name">{{ citizen.name }}</span>
-        
-        <div 
-          v-if="activeTooltip === citizen.name"
-          class="tooltip"
-          :style="tooltipStyle"
-        >
-          <div class="tooltip-content">
-            <strong>{{ getFullPath(nodeKey) }}</strong><br>
-            {{ citizen.data }}
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div v-if="hasChildren && isExpanded" class="children">
-      <TreeNode 
-        v-for="(childNode, childKey) in node.children" 
-        :key="childKey"
-        :node="childNode"
-        :nodeKey="childKey"
-        :level="level + 1"
-        :config="config"
-        @node-click="$emit('node-click', $event)"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, computed, defineProps, defineEmits } from 'vue';
 import { ChevronDown, ChevronUp } from 'lucide-vue-next';
@@ -123,6 +64,65 @@ function getFullPath(currentKey) {
   return path;
 }
 </script>
+
+<template>
+  <div class="tree-node" :style="{ marginLeft: level * 20 + 'px' }">
+    <div class="node-content" @click="toggleNode">
+      <div class="node-header">
+        <span 
+          v-if="hasChildren" 
+          class="expand-icon"
+        >
+          <ChevronDown v-if="!isExpanded" class="icon" />
+          <ChevronUp v-else class="icon" />
+        </span>
+        <span v-else class="expand-icon-placeholder"></span>
+        
+        <span class="node-type">{{ node.type }}</span>
+        <span class="node-name">{{ nodeKey }}</span>
+        
+        <span v-if="node.citizens && node.citizens.length > 0" class="citizens-count">
+          ({{ node.citizens.length }} {{ getNameOnNumber(node.citizens.length, 'житель', 'жителя', 'жителей') }})
+        </span>
+      </div>
+    </div>
+    
+    <div v-if="node.citizens && node.citizens.length > 0 && isExpanded" class="citizens-list">
+      <div 
+        v-for="citizen in node.citizens" 
+        :key="citizen.name"
+        class="citizen-item"
+        @mouseenter="showTooltip(citizen)"
+        @mouseleave="hideTooltip"
+      >
+        <span class="citizen-name">{{ citizen.name }}</span>
+        
+        <div 
+          v-if="activeTooltip === citizen.name"
+          class="tooltip"
+          :style="tooltipStyle"
+        >
+          <div class="tooltip-content">
+            <strong>{{ getFullPath(nodeKey) }}</strong><br>
+            {{ citizen.data }}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div v-if="hasChildren && isExpanded" class="children">
+      <TreeNode 
+        v-for="(childNode, childKey) in node.children" 
+        :key="childKey"
+        :node="childNode"
+        :nodeKey="childKey"
+        :level="level + 1"
+        :config="config"
+        @node-click="$emit('node-click', $event)"
+      />
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .tree-node {

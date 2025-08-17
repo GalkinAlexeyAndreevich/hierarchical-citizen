@@ -1,3 +1,25 @@
+<script setup>
+import { computed } from 'vue';
+
+const props = defineProps({
+  hierarchyConfig: Array,
+  totalCitizens: Number,
+  showAllCitizens: {
+    type: Boolean,
+    default: false
+  }
+});
+
+defineEmits(['toggle-citizens']);
+
+const activeLevelsText = computed(() => {
+  return props.hierarchyConfig
+    .filter(level => level.enabled)
+    .map(level => level.name)
+    .join(' → ');
+});
+</script>
+
 <template>
   <div class="hierarchy-info">
     <h3>Дерево иерархии</h3>
@@ -5,9 +27,6 @@
       <p>
         <strong>Активные уровни:</strong> 
         {{ activeLevelsText }}
-      </p>
-      <p>
-        <strong>Всего уровней:</strong> {{ hierarchyConfig.length }}
       </p>
       <p>
         <strong>Всего жителей:</strong> {{ totalCitizens }}
@@ -30,28 +49,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed } from 'vue';
-
-const props = defineProps({
-  hierarchyConfig: Array,
-  totalCitizens: Number,
-  showAllCitizens: {
-    type: Boolean,
-    default: false
-  }
-});
-
-defineEmits(['toggle-citizens']);
-
-const activeLevelsText = computed(() => {
-  return props.hierarchyConfig
-    .filter(level => level.enabled)
-    .map(level => level.name)
-    .join(' → ');
-});
-</script>
 
 <style scoped>
 .hierarchy-info {

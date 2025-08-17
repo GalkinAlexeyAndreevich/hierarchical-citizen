@@ -1,3 +1,21 @@
+<script setup>
+  import { defineProps, defineEmits } from 'vue';
+  import TreeNode from './TreeNode.vue';
+
+  const props = defineProps({
+    data: {
+      type: Object,
+      required: true
+    },
+    config: {
+      type: Array,
+      required: true
+    }
+  });
+
+  defineEmits(['node-click']);
+</script>
+
 <template>
   <div class="hierarchy-tree">
     <div v-if="!data || Object.keys(data).length === 0" class="empty-state">
@@ -17,24 +35,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-  import { defineProps, defineEmits } from 'vue';
-  import TreeNode from './TreeNode.vue';
-
-  const props = defineProps({
-    data: {
-      type: Object,
-      required: true
-    },
-    config: {
-      type: Array,
-      required: true
-    }
-  });
-
-  defineEmits(['node-click']);
-</script>
 
 <style scoped>
   .hierarchy-tree {

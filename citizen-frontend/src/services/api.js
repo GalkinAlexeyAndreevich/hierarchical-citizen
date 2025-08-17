@@ -14,15 +14,25 @@ async function request(endpoint, options = {}) {
 
   try {
     const response = await fetch(url, config);
-    const data = await response.json();
+    
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      console.error('Failed to parse JSON response:', parseError);
+      throw new Error('Invalid JSON response from server');
+    }
     
     if (!response.ok) {
-      throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      throw new Error(data.error || data.message || `HTTP error! status: ${response.status}`);
     }
     
     return data;
   } catch (error) {
     console.error('API request failed:', error);
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Не удается подключиться к серверу. Проверьте, запущен ли бэкенд.');
+    }
     throw error;
   }
 }

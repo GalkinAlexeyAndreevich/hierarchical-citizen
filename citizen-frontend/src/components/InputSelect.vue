@@ -1,40 +1,3 @@
-<template>
-  <div class="input-select-container">
-    <div class="input-wrapper">
-      <input
-        v-model="inputValue"
-        :placeholder="placeholder"
-        class="input-select-field"
-        @input="handleInput"
-        @focus="showDropdown = true"
-        @blur="handleBlur"
-        @keydown="handleKeydown"
-      />
-      <div class="input-arrow" @click="toggleDropdown">▼</div>
-    </div>
-    
-          <div v-if="showDropdown && filteredOptions.length > 0" class="dropdown">
-      <div
-        v-for="(option, index) in filteredOptions"
-        :key="option"
-        :class="['dropdown-item', { 'selected': index === selectedIndex }]"
-        @click="selectOption(option)"
-        @mouseenter="selectedIndex = index"
-      >
-        {{ option }}
-      </div>
-      
-              <div
-          v-if="inputValue && !filteredOptions.includes(inputValue)"
-          class="dropdown-item new-value"
-          @click="createNewValue"
-        >
-          Создать "{{ inputValue }}"
-        </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, computed, watch, defineProps, defineEmits } from 'vue';
 
@@ -123,6 +86,43 @@ function toggleDropdown() {
   showDropdown.value = !showDropdown.value;
 }
 </script>
+
+<template>
+  <div class="input-select-container">
+    <div class="input-wrapper">
+      <input
+        v-model="inputValue"
+        :placeholder="placeholder"
+        class="input-select-field"
+        @input="handleInput"
+        @focus="showDropdown = true"
+        @blur="handleBlur"
+        @keydown="handleKeydown"
+      />
+      <div class="input-arrow" @click="toggleDropdown">▼</div>
+    </div>
+    
+    <div v-if="showDropdown && filteredOptions.length > 0" class="dropdown">
+      <div
+        v-for="(option, index) in filteredOptions"
+        :key="option"
+        :class="['dropdown-item', { 'selected': index === selectedIndex }]"
+        @click="selectOption(option)"
+        @mouseenter="selectedIndex = index"
+      >
+        {{ option }}
+      </div>
+      
+      <div
+        v-if="inputValue && !filteredOptions.includes(inputValue)"
+        class="dropdown-item new-value"
+        @click="createNewValue"
+      >
+        Создать "{{ inputValue }}"
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .input-select-container {

@@ -1,3 +1,71 @@
+<script setup>
+import { ref } from 'vue';
+import { useCitiesStore } from '../stores/cities';
+
+const citiesStore = useCitiesStore();
+
+const emit = defineEmits(['city-added', 'close']);
+
+const cityData = ref({
+  name: '',
+  population: ''
+});
+
+const loading = ref(false);
+const nameError = ref('');
+
+const clearNameError = () => {
+  if (nameError.value) {
+    nameError.value = '';
+  }
+};
+
+const resetForm = () => {
+  cityData.value = {
+    name: '',
+    population: ''
+  };
+  nameError.value = '';
+};
+
+const addNewCity = async () => {
+  try {
+    loading.value = true;
+    nameError.value = '';
+    
+    // Валидация
+    if (!cityData.value.name.trim()) {
+      nameError.value = 'Название города обязательно для заполнения';
+      return;
+    }
+    
+    if (!cityData.value.population || cityData.value.population < 0) {
+      alert('Численность населения должна быть положительным числом');
+      return;
+    }
+    
+    const response = await citiesStore.addCity({
+      name: cityData.value.name.trim(),
+      population: parseInt(cityData.value.population)
+    });
+    
+    // Успешно добавлен
+    emit('city-added', response);
+    resetForm();
+    
+  } catch (error) {
+    // Обработка ошибки дублирования имени
+    if (error.message.includes('уже существует')) {
+      nameError.value = 'Город с таким названием уже существует';
+    } else {
+      alert(`Ошибка при добавлении города: ${error.message}`);
+    }
+  } finally {
+    loading.value = false;
+  }
+};
+</script>
+
 <template>
   <div class="add-city">
     <h3>Добавить новый город</h3>
@@ -41,72 +109,6 @@
     </form>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import { createCity } from '../services/api';
-
-const emit = defineEmits(['city-added', 'close']);
-
-const cityData = ref({
-  name: '',
-  population: ''
-});
-
-const loading = ref(false);
-const nameError = ref('');
-
-const clearNameError = () => {
-  if (nameError.value) {
-    nameError.value = '';
-  }
-};
-
-const resetForm = () => {
-  cityData.value = {
-    name: '',
-    population: ''
-  };
-  nameError.value = '';
-};
-
-const addNewCity = async () => {
-  try {
-    loading.value = true;
-    nameError.value = '';
-    
-    // Валидация
-    if (!cityData.value.name.trim()) {
-      nameError.value = 'Название города обязательно для заполнения';
-      return;
-    }
-    
-    if (!cityData.value.population || cityData.value.population < 0) {
-      alert('Численность населения должна быть положительным числом');
-      return;
-    }
-    
-    const response = await createCity({
-      name: cityData.value.name.trim(),
-      population: parseInt(cityData.value.population)
-    });
-    
-    // Успешно добавлен
-    emit('city-added', response.data);
-    resetForm();
-    
-  } catch (error) {
-    // Обработка ошибки дублирования имени
-    if (error.message.includes('уже существует')) {
-      nameError.value = 'Город с таким названием уже существует';
-    } else {
-      alert(`Ошибка при добавлении города: ${error.message}`);
-    }
-  } finally {
-    loading.value = false;
-  }
-};
-</script>
 
 <style scoped>
 .add-city {
