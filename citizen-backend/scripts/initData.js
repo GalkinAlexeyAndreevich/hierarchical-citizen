@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Citizen = require('../models/Citizen');
 const City = require('../models/City');
+const HierarchyConfig = require('../models/HierarchyConfig');
 
 // Подключение к MongoDB
 mongoose.connect('mongodb://localhost:27017/citizen-db', {
@@ -47,6 +48,18 @@ async function initData() {
     console.log('Очистка существующих данных...');
     await Citizen.deleteMany({});
     await City.deleteMany({});
+    await HierarchyConfig.deleteMany({});
+
+    console.log('Создание иерархии...');
+    const defaultConfig = new HierarchyConfig({
+      levels: [
+        { name: 'Город', type: 'city', enabled: true, required: true },
+        { name: 'Район', type: 'district', enabled: true, required: false },
+        { name: 'Улица', type: 'street', enabled: true, required: false }
+      ]
+    });
+    await defaultConfig.save();
+    console.log('Создана стандартная конфигурация иерархии');
 
     console.log('Создание городов...');
     const cities = await City.insertMany(citiesData);

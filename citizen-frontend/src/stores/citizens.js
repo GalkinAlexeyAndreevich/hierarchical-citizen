@@ -15,15 +15,7 @@ export const useCitizensStore = defineStore('citizens', () => {
     error.value = null
     try {
       const response = await getCitizens()
-
-      if (response.data && Array.isArray(response.data)) {
-        citizens.value = [...response.data]
-      } else if (response && Array.isArray(response)) {
-        // Если response сам является массивом
-        citizens.value = [...response]
-      } else {
-        citizens.value = []
-      }
+      citizens.value = [...response.data]
     } catch (err) {
       error.value = err.message
       console.error('Ошибка загрузки жителей:', err)

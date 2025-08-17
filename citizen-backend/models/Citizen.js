@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const groupSchema = new mongoose.Schema({
   type: {
     type: String,
-    required: true,
-    enum: ['city', 'district', 'street']
+    required: true
   },
   name: {
     type: String,
@@ -23,14 +22,12 @@ const citizenSchema = new mongoose.Schema({
     required: true
   },
   city_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'City',
+    type: String,
     required: true
   },
   city: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'City',
-    required: true
   }
 }, {
   timestamps: true
@@ -41,24 +38,5 @@ citizenSchema.index({ 'groups.type': 1, 'groups.name': 1 });
 citizenSchema.index({ city_id: 1 });
 citizenSchema.index({ city: 1 });
 citizenSchema.index({ name: 1 });
-
-// Виртуальное поле для получения города
-citizenSchema.virtual('cityData', {
-  ref: 'City',
-  localField: 'city',
-  foreignField: '_id',
-  justOne: true
-});
-
-// Метод для получения иерархического пути
-citizenSchema.methods.getHierarchyPath = function() {
-  return this.groups
-    .sort((a, b) => {
-      const order = ['city', 'district', 'street'];
-      return order.indexOf(a.type) - order.indexOf(b.type);
-    })
-    .map(group => group.name)
-    .join(' → ');
-};
 
 module.exports = mongoose.model('Citizen', citizenSchema);

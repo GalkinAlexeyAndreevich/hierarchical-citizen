@@ -8,11 +8,11 @@ COPY . .
 
 # Устанавливаем зависимости для бэкенда
 WORKDIR /app/citizen-backend
-RUN npm ci --only=production
+RUN npm install
 
 # Устанавливаем зависимости для фронтенда
 WORKDIR /app/citizen-frontend
-RUN npm ci
+RUN npm install
 
 # Собираем фронтенд
 RUN npm run build

@@ -47,7 +47,7 @@
     const rect = event.target.getBoundingClientRect()
     tooltipStyle.value = {
       left: rect.left + 'px',
-      top: rect.top - 60 + 'px',
+      top: rect.top - 40 + 'px',
     }
   }
 

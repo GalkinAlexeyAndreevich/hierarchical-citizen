@@ -63,7 +63,6 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { name, city_id, groups } = req.body;
-    
     // Проверяем существование города
     const city = await City.findById(city_id);
     if (!city) {
@@ -76,7 +75,6 @@ router.post('/', async (req, res) => {
     // Создаем жителя
     const citizen = new Citizen({
       name,
-      city: city_id,
       city_id: city_id, // Оставляем для обратной совместимости
       groups
     });
