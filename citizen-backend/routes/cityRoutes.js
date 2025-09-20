@@ -1,89 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const City = require('../models/City');
+const cityController = require('../controllers/cityController');
 
-// Получить все города
-router.get('/', async (req, res) => {
-  try {
-    const { search } = req.query;
-    
-    const query = {};
-    
-    if (search) {
-      query.name = { $regex: search, $options: 'i' };
-    }
-    
-    const cities = await City.find(query)
-      .sort({ name: 1 });
-    
-    res.json({
-      success: true,
-      data: cities
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// Получить город по ID
-router.get('/:id', async (req, res) => {
-  try {
-    const city = await City.findById(req.params.id);
-    
-    if (!city) {
-      return res.status(404).json({
-        success: false,
-        error: 'Город не найден'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: city
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// Создать новый город
-router.post('/', async (req, res) => {
-  try {
-    const { name, population } = req.body;
-    
-    // Проверяем уникальность имени
-    const existingCity = await City.findOne({ name });
-    if (existingCity) {
-      return res.status(400).json({
-        success: false,
-        error: 'Город с таким именем уже существует'
-      });
-    }
-    
-    const city = new City({
-      name,
-      population: population || 0
-    });
-    
-    await city.save();
-    
-    res.status(201).json({
-      success: true,
-      data: city,
-      message: 'Город успешно создан'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+router.get('/', cityController.getAllCities);
+router.get('/:id', cityController.getCityById);
+router.post('/', cityController.createCity);
+router.put('/:id', cityController.updateCity);
+router.delete('/:id', cityController.deleteCity);
 
 module.exports = router;
