@@ -24,4 +24,4 @@ WORKDIR /app
 EXPOSE 3000 5173
 
 # Запускаем оба сервиса
-CMD sh -c "cd citizen-frontend && VITE_API_URL=http://localhost:3000 npm run dev -- --host 0.0.0.0 & cd citizen-backend && npm start"
+CMD sh -c "cd citizen-backend && npm start & cd citizen-frontend && VITE_API_URL=http://localhost:3000 npm run dev -- --host 0.0.0.0"
